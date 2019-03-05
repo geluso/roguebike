@@ -67,6 +67,8 @@ class Space
     if self.valid?(new_coord)
       @player.xx = new_coord[:xx]
       @player.yy = new_coord[:yy]
+      
+      self.react(@player)
     end
   end
 
@@ -74,6 +76,16 @@ class Space
     is_x_valid = xx >= 0 && xx < @grid.width 
     is_y_valid = yy >= 0 && yy < @grid.height 
     is_x_valid && is_y_valid
+  end
+
+  def react(actor)
+    if actor.xx == @waygate_down.xx && actor.yy == @waygate_down.yy
+      puts "DOWN!!"
+    end
+
+    if actor.xx == @waygate_up.xx && actor.yy == @waygate_up.yy
+      puts "up!!"
+    end
   end
 
   def to_s
