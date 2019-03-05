@@ -67,6 +67,8 @@ class GameLoop
       self.fire
     elsif choice == "F"
       self.fire_mega
+    elsif choice == "FIRE"
+      self.fire_ultra
     elsif choice == " " || choice == ""
       self.engage
     else
@@ -145,6 +147,18 @@ class GameLoop
     else
       @has_fired = true
       @space.player.fire_mega.each do |projectile|
+        @space.fire(projectile)
+      end
+      @space.animate_projectiles(self)
+    end
+  end
+
+  def fire_ultra
+    if @has_fired
+      @error_message = "Already fired."
+    else
+      @has_fired = true
+      @space.player.fire_ultra.each do |projectile|
         @space.fire(projectile)
       end
       @space.animate_projectiles(self)

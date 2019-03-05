@@ -66,6 +66,47 @@ class Player
     [p1, p2, p3]
   end
 
+  def fire_ultra
+    t1 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(@facing)
+    )
+
+    t2 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(Geo.turn_right(@facing))
+    )
+
+    t3 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(Geo.turn_right(Geo.turn_right(@facing)))
+    )
+
+    t4 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(@facing))))
+    )
+
+    t5 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(@facing)))))
+    )
+
+    t6 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(Geo.turn_right(@facing))))))
+    )
+
+    p1 = Projectile.new(t1)
+    p2 = Projectile.new(t2)
+    p3 = Projectile.new(t3)
+    p4 = Projectile.new(t4)
+    p5 = Projectile.new(t5)
+    p6 = Projectile.new(t6)
+
+    [p1, p2, p3, p4, p5, p6]
+  end
+
   def to_s
     "#{self.symbol} #{@xx} #{@yy}"
   end
