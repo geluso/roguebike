@@ -1,8 +1,8 @@
 class Space
   attr_reader :player
 
-  def initialize
-    @grid = Grid.new(width: 5, height: 4)
+  def initialize(width: 5, height: 4)
+    @grid = Grid.new(width: width, height: height)
     @player = Player.new(xx: 0, yy: 0)
   end
 

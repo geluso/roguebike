@@ -1,6 +1,6 @@
 class GameLoop
-  def initialize
-    @space = Space.new
+  def initialize(width: 5, height: 4)
+    @space = Space.new(width: width, height: height)
     @is_running = true
   end
 
