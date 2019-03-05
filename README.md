@@ -7,3 +7,6 @@ mechanics from Powerboats racing board game.
 Ramp up speed, set your trajectory and fly forward toward your goal!
 Balance taking damage with reaching your goal.
 
+## Navigation Demo
+
+* [Navigation Demo on YouTube](https://youtu.be/JOPUN4RhysM)
