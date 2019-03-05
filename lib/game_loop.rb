@@ -2,6 +2,9 @@ class GameLoop
   def initialize(width: 5, height: 4)
     @space = Space.new(width: width, height: height)
     @is_running = true
+    
+    @turn_state = "straight"
+    @speed_state = "maintain"
   end
 
   def run
@@ -38,16 +41,47 @@ class GameLoop
     if choice == "x"
       @is_running = false
     elsif choice == "h"
-      @space.turn_left
+      if @turn_state != "left"
+        if @turn_state == "straight"
+          @turn_state = "left"
+        elsif @turn_state == "right"
+          @turn_state = "straight"
+        end
+        @space.turn_left
+      end
     elsif choice == "l"
-      @space.turn_right
+      if @turn_state != "right"
+        if @turn_state == "straight"
+          @turn_state = "right"
+        elsif @turn_state == "left"
+          @turn_state = "straight"
+        end
+        @space.turn_right
+      end
     elsif choice == "+"
-      @space.speed_up
+      if @speed_state != "speedup"
+        if @speed_state == "slowdown"
+          @speed_state = "maintain"
+        elsif @speed_state == "maintain"
+          @speed_state = "speedup"
+        end
+        @space.speed_up
+      end
     elsif choice == "-"
-      @space.slow_down
+      if @speed_state != "slowdown" && @space.player.speed > 0
+        if @speed_state == "speedup"
+          @speed_state = "maintain"
+        elsif @speed_state == "maintain"
+          @speed_state = "slowdown"
+        end
+        @space.slow_down
+      end
     elsif choice == " " || choice == ""
       @space.player.speed.times do
         @space.engage
+
+        @turn_state = "straight"
+        @speed_state = "maintain"
       end
     end
   end
