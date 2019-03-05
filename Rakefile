@@ -7,7 +7,7 @@ task :grid do
 end
 
 desc 'Print a big grid'
-task :biggrid do
+task :big do
   game = GameLoop.new(height: 16, width: 40)
   game.run
 end
