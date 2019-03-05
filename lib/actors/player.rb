@@ -5,7 +5,7 @@ class Player
     @xx = xx
     @yy = yy
     @facing = :EAST
-    @speed = 0
+    @speed = 1
     
     @hits = 0
     @hp = 10
