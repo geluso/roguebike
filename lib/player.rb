@@ -17,4 +17,8 @@ class Player
 
   def speed_up
   end
+
+  def to_s
+    "#{self.symbol} #{@xx} #{@yy}"
+  end
 end

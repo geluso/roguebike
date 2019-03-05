@@ -10,6 +10,12 @@ class Grid
     @height = height
   end
 
+  def random_point
+    xx = rand(0..(@width-1))
+    yy = rand(0..(@height-1))
+    {xx: xx, yy: yy}
+  end
+
   def to_s
     line = ". " * @width + "\n"
     line += " ." * @width + "\n"

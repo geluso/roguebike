@@ -22,7 +22,8 @@ class GameLoop
     xx = @space.player.xx
     yy = @space.player.yy
 
-    puts "player: (#{xx}, #{yy})"
+    # puts "player: (#{xx}, #{yy})"
+    # puts "asteroids: #{@space.asteroids}"
   end
 
   def tick
