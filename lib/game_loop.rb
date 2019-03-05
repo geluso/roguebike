@@ -24,10 +24,12 @@ class GameLoop
     
     speed = @space.player.speed
     speed_meter = "+" * speed
-    puts "Speed: #{speed} #{speed_meter}"
+    puts "       Speed: #{speed} #{speed_meter}"
 
     hp_meter = "#{@space.player.damage}/#{@space.player.hp}"
-    puts "Health: #{hp_meter}"
+    puts "      Health: #{hp_meter}"
+    puts " Turn change: #{@turn_state}"
+    puts "Speed change: #{@speed_state}"
 
     xx = @space.player.xx
     yy = @space.player.yy
