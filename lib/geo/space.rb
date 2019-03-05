@@ -117,7 +117,7 @@ class Space
   def valid?(xx: 0, yy: 0)
     collision = collide(xx, yy)
     if collision != nil
-      @player.collide_actor(collision)
+      @player.collide(collision)
     end
 
     valid_xx_yy(xx, yy) && collision == nil

@@ -10,6 +10,7 @@ class GameLoop
     @speed_state = "maintain"
 
     @is_animated = false
+    @error_message = nil
   end
 
   def run
@@ -40,8 +41,12 @@ class GameLoop
     puts " Turn change: #{@turn_state}"
     puts "Speed change: #{@speed_state}"
 
-    xx = @space.player.xx
-    yy = @space.player.yy
+    if @error_message
+      puts @error_message
+    end
+
+    # xx = @space.player.xx
+    # yy = @space.player.yy
 
     # puts "player: (#{xx}, #{yy})"
     # puts "asteroids: #{@space.asteroids}"
@@ -62,11 +67,15 @@ class GameLoop
       self.fire
     elsif choice == " " || choice == ""
       self.engage
+    else
+      @error_message = nil
     end
   end
 
   def attempt_turn_left
-    if @turn_state != "left"
+    if @turn_state == "left"
+      @error_message = "Already turned left."
+    else
       if @turn_state == "straight"
         @turn_state = "left"
       elsif @turn_state == "right"
@@ -77,7 +86,9 @@ class GameLoop
   end
 
   def attempt_turn_right
-    if @turn_state != "right"
+    if @turn_state == "right"
+      @error_message = "Already turned right."
+    else
       if @turn_state == "straight"
         @turn_state = "right"
       elsif @turn_state == "left"
@@ -88,7 +99,9 @@ class GameLoop
   end
 
   def attempt_speed_up
-    if @speed_state != "speedup"
+    if @speed_state == "speedup"
+      @error_message = "Already sped up."
+    else
       if @speed_state == "slowdown"
         @speed_state = "maintain"
       elsif @speed_state == "maintain"
@@ -99,7 +112,11 @@ class GameLoop
   end
 
   def attempt_slow_down
-    if @speed_state != "slowdown" && @space.player.speed > 0
+    if @speed_state == "slowdown"
+      @error_message = "Already slowed down."
+    elsif @space.player.speed <= 0
+      @error_message = "Speed already at zero."
+    else
       if @speed_state == "speedup"
         @speed_state = "maintain"
       elsif @speed_state == "maintain"
@@ -110,7 +127,9 @@ class GameLoop
   end
 
   def fire
-    if !@has_fired
+    if @has_fired
+      @error_message = "Already fired."
+    else
       @has_fired = true
       @space.fire(@space.player, self)
     end
