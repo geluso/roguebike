@@ -18,6 +18,13 @@ class GameLoop
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage"
     puts "=" * @space.grid.width * 2
     puts prompt
+    
+    speed = @space.player.speed
+    speed_meter = "+" * speed
+    puts "Speed: #{speed} #{speed_meter}"
+
+    hp_meter = "#{@space.player.damage}/#{@space.player.hp}"
+    puts "Health: #{hp_meter}"
 
     xx = @space.player.xx
     yy = @space.player.yy
@@ -34,8 +41,14 @@ class GameLoop
       @space.turn_left
     elsif choice == "l"
       @space.turn_right
+    elsif choice == "+"
+      @space.speed_up
+    elsif choice == "-"
+      @space.slow_down
     elsif choice == " " || choice == ""
-      @space.engage
+      @space.player.speed.times do
+        @space.engage
+      end
     end
   end
 end

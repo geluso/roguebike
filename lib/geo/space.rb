@@ -62,6 +62,14 @@ class Space
     @player.facing = Geo.turn_left(@player.facing)
   end
 
+  def speed_up
+    @player.speed_up
+  end
+
+  def slow_down
+    @player.slow_down
+  end
+
   def engage
     new_coord = Geo.step(@player.xx, @player.yy, @player.facing)
     if self.valid?(new_coord)
@@ -78,6 +86,10 @@ class Space
 
     collision = @asteroids.find do |asteroid|
       asteroid.xx == xx && asteroid.yy == yy
+    end
+
+    if collision != nil
+      @player.collide(collision)
     end
 
     is_x_valid && is_y_valid && collision == nil
