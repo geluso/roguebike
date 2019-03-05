@@ -1,18 +1,25 @@
 class GameLoop
+  attr_writer :is_animated
+
   def initialize(width: 5, height: 4)
     @space = Space.new(width: width, height: height)
     @is_running = true
     
+    @has_fired = false
     @turn_state = "straight"
     @speed_state = "maintain"
+
+    @is_animated = false
   end
 
   def run
     while @is_running
       self.display
 
-      choice = STDIN.gets.chomp
-      self.tick(choice)
+      if !@is_animated
+        choice = STDIN.gets.chomp
+        self.tick(choice)
+      end
     end
   end
 
@@ -51,6 +58,8 @@ class GameLoop
       self.attempt_speed_up
     elsif choice == "-"
       self.attempt_slow_down
+    elsif choice == "f"
+      self.fire
     elsif choice == " " || choice == ""
       self.engage
     end
@@ -100,10 +109,18 @@ class GameLoop
     end
   end
 
+  def fire
+    if !@has_fired
+      @has_fired = true
+      @space.fire(@space.player, self)
+    end
+  end
+
   def engage
     @space.player.speed.times do
       @space.engage
 
+      @has_fired = false
       @turn_state = "straight"
       @speed_state = "maintain"
     end

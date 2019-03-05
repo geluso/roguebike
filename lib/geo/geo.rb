@@ -47,6 +47,11 @@ class Geo
     end
   end
 
+  def self.step_transform(transform)
+    transform = self.step(transform.xx, transform.yy, transform.facing)
+    Transform.new(transform)
+  end
+
   def self.step(xx, yy, direction)
     if direction == :WEST
       xx -= 1
@@ -74,6 +79,6 @@ class Geo
       yy += 1
     end
 
-    {xx: xx, yy: yy}
+    {xx: xx, yy: yy, facing: direction}
   end
 end

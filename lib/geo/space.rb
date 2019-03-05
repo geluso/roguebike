@@ -13,6 +13,7 @@ class Space
 
     @structural_points = Set.new
     @asteroids = Set.new
+    @projectiles = Set.new
 
     self.generate_asteroids
     self.add_waygates
@@ -72,7 +73,9 @@ class Space
 
   def engage
     new_coord = Geo.step(@player.xx, @player.yy, @player.facing)
-    if self.valid?(new_coord)
+    xx = new_coord[:xx]
+    yy = new_coord[:yy]
+    if self.valid?(xx: xx, yy: yy)
       @player.xx = new_coord[:xx]
       @player.yy = new_coord[:yy]
       
@@ -80,19 +83,64 @@ class Space
     end
   end
 
-  def valid?(xx: 0, yy: 0)
-    is_x_valid = xx >= 0 && xx < @grid.width 
-    is_y_valid = yy >= 0 && yy < @grid.height 
+  def fire(actor, screen)
+    projectile = actor.fire
+    @projectiles << projectile
 
-    collision = @asteroids.find do |asteroid|
+    # make sure players can't enter text during animations
+    screen.is_animated = true
+
+    while projectile.is_alive
+      projectile.step
+
+      # projectile went off map
+      if !valid_actor(projectile)
+        projectile.is_alive = false
+      end
+
+      collision = self.collide_actor(projectile)
+      if collision != nil
+        @asteroids.delete(collision)
+        projectile.is_alive = false
+      end
+
+      # redraw the screen every step
+      screen.display
+      sleep PROJECTILE_FRAME_RATE
+    end
+
+    @projectiles.delete projectile
+
+    screen.is_animated = false
+  end
+
+  def valid?(xx: 0, yy: 0)
+    collision = collide(xx, yy)
+    if collision != nil
+      @player.collide_actor(collision)
+    end
+
+    valid_xx_yy(xx, yy) && collision == nil
+  end
+
+  def valid_actor(actor)
+    valid_xx_yy(actor.xx, actor.yy)
+  end
+
+  def valid_xx_yy(xx, yy)
+    is_xx_valid = xx >= 0 && xx < @grid.width 
+    is_yy_valid = yy >= 0 && yy < @grid.height 
+    is_xx_valid && is_yy_valid
+  end
+
+  def collide_actor(actor)
+    self.collide(actor.xx, actor.yy)
+  end
+
+  def collide(xx, yy)
+    @asteroids.find do |asteroid|
       asteroid.xx == xx && asteroid.yy == yy
     end
-
-    if collision != nil
-      @player.collide(collision)
-    end
-
-    is_x_valid && is_y_valid && collision == nil
   end
 
   def react(actor)
@@ -111,6 +159,11 @@ class Space
     # draw all the asteroids
     @asteroids.each do |asteroid|
       draw_actor(grid, asteroid)
+    end
+
+    # draw projectiles
+    @projectiles.each do |projectile|
+      draw_actor(grid, projectile)
     end
 
     # then draw the player

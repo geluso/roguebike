@@ -38,6 +38,11 @@ class Player
     @hp - @hits
   end
 
+  def fire
+    transform = Transform.new(xx: @xx, yy: @yy, facing: @facing)
+    Projectile.new(transform)
+  end
+
   def to_s
     "#{self.symbol} #{@xx} #{@yy}"
   end
