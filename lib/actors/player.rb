@@ -9,7 +9,8 @@ class Player
   end
 
   def symbol
-    Geo.symbol(@facing)
+    ss = Geo.symbol(@facing)
+    Pastel.new.yellow(ss)
   end
 
   def slow_down

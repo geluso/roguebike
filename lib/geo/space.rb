@@ -1,12 +1,21 @@
+require 'set'
+
 class Space
-  attr_reader :player, :asteroids
+  attr_reader :player, :asteroids, :waygate_up, :waygate_down
 
   def initialize(width: 5, height: 4)
     @grid = Grid.new(width: width, height: height)
     @player = Player.new(xx: 0, yy: 0)
-    @asteroids = []
+
+    # wait to assign waygates until after asteroids are placed
+    @waygate_up = nil
+    @waygate_down = nil
+
+    @structural_points = Set.new
+    @asteroids = Set.new
 
     self.generate_asteroids
+    self.add_waygates
   end
 
   def generate_asteroids
@@ -19,13 +28,30 @@ class Space
     asteroids_points = Set.new
     num_asteroids.times do
       point = @grid.random_point
-      asteroids_points << point
+      if !@structural_points.include? point
+        @structural_points << point
+        asteroids_points << point
+      end
     end
 
     @asteroids = asteroids_points.map do |point|
-      puts "new asteroid at #{point[:xx]}"
       Asteroid.new(xx: point[:xx], yy: point[:yy])
     end
+  end
+
+  def add_waygates
+    free_points = Set.new
+    while free_points.length < 2
+      point = @grid.random_point
+      if !@structural_points.include? point
+        @structural_points << point
+        free_points << point
+      end
+    end
+
+    free_points = free_points.collect
+    @waygate_down = WaygateDown.new(free_points.next)
+    @waygate_up = WaygateUp.new(free_points.next)
   end
 
   def turn_right
@@ -59,6 +85,8 @@ class Space
     end
 
     # then draw the player
+    draw_actor(grid, @waygate_up)
+    draw_actor(grid, @waygate_down)
     draw_actor(grid, @player)
 
     grid
