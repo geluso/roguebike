@@ -13,7 +13,7 @@ class Space
     grid_size = @grid.width * @grid.height
 
     # pick a percentage density between 18-35 percent
-    density = rand(18..35)
+    density = rand(MIN_ASTEROID_DENSITY..MAX_ASTEROID_DENSITY)
     num_asteroids = (grid_size * (density.to_f / 100)).floor
 
     asteroids_points = Set.new
