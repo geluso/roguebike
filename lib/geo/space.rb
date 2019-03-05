@@ -75,7 +75,12 @@ class Space
   def valid?(xx: 0, yy: 0)
     is_x_valid = xx >= 0 && xx < @grid.width 
     is_y_valid = yy >= 0 && yy < @grid.height 
-    is_x_valid && is_y_valid
+
+    collision = @asteroids.find do |asteroid|
+      asteroid.xx == xx && asteroid.yy == yy
+    end
+
+    is_x_valid && is_y_valid && collision == nil
   end
 
   def react(actor)
