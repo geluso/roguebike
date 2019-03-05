@@ -1,7 +1,7 @@
 require 'set'
 
 class Space
-  attr_reader :player, :asteroids, :waygate_up, :waygate_down
+  attr_reader :player, :grid, :asteroids, :waygate_up, :waygate_down
 
   def initialize(width: 5, height: 4)
     @grid = Grid.new(width: width, height: height)

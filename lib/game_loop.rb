@@ -16,7 +16,7 @@ class GameLoop
     puts @space
 
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage"
-    puts "=" * prompt.length
+    puts "=" * @space.grid.width * 2
     puts prompt
 
     xx = @space.player.xx
