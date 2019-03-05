@@ -43,6 +43,29 @@ class Player
     Projectile.new(transform)
   end
 
+  def fire_mega
+    t1 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_left(@facing)
+    )
+
+    t2 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: @facing
+    )
+
+    t3 = Transform.new(
+      xx: @xx, yy: @yy,
+      facing: Geo.turn_right(@facing)
+    )
+
+    p1 = Projectile.new(t1)
+    p2 = Projectile.new(t2)
+    p3 = Projectile.new(t3)
+
+    [p1, p2, p3]
+  end
+
   def to_s
     "#{self.symbol} #{@xx} #{@yy}"
   end

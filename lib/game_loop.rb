@@ -65,6 +65,8 @@ class GameLoop
       self.attempt_slow_down
     elsif choice == "f"
       self.fire
+    elsif choice == "F"
+      self.fire_mega
     elsif choice == " " || choice == ""
       self.engage
     else
@@ -131,7 +133,21 @@ class GameLoop
       @error_message = "Already fired."
     else
       @has_fired = true
-      @space.fire(@space.player, self)
+      projectile = @space.player.fire
+      @space.fire(projectile)
+      @space.animate_projectiles(self)
+    end
+  end
+
+  def fire_mega
+    if @has_fired
+      @error_message = "Already fired."
+    else
+      @has_fired = true
+      @space.player.fire_mega.each do |projectile|
+        @space.fire(projectile)
+      end
+      @space.animate_projectiles(self)
     end
   end
 

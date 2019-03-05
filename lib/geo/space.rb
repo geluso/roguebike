@@ -83,33 +83,38 @@ class Space
     end
   end
 
-  def fire(actor, screen)
-    projectile = actor.fire
+  def fire(projectile)
     @projectiles << projectile
+  end
 
+  def animate_projectiles(screen)
     # make sure players can't enter text during animations
     screen.is_animated = true
 
-    while projectile.is_alive
-      projectile.step
+    while !@projectiles.empty?
+      @projectiles.each do |projectile|
+        projectile.step
 
-      # projectile went off map
-      if !valid_actor(projectile)
-        projectile.is_alive = false
+        # projectile went off map
+        if !valid_actor(projectile)
+          projectile.is_alive = false
+        end
+
+        collision = self.collide_actor(projectile)
+        if collision != nil
+          @asteroids.delete(collision)
+          projectile.is_alive = false
+        end
+
+        unless projectile.is_alive
+          @projectiles.delete projectile
+        end
+
+        # redraw the screen every step
+        screen.display
+        sleep PROJECTILE_FRAME_RATE
       end
-
-      collision = self.collide_actor(projectile)
-      if collision != nil
-        @asteroids.delete(collision)
-        projectile.is_alive = false
-      end
-
-      # redraw the screen every step
-      screen.display
-      sleep PROJECTILE_FRAME_RATE
     end
-
-    @projectiles.delete projectile
 
     screen.is_animated = false
   end
