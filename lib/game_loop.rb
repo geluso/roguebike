@@ -30,17 +30,11 @@ class GameLoop
     if choice == "x"
       @is_running = false
     elsif choice == "h"
-      @space.player.turn_left
+      @space.turn_left
     elsif choice == "l"
-      @space.player.turn_right
-    elsif choice == "j"
-      @space.player.slow_down
-    elsif choice == "k"
-      @space.player.speed_up
+      @space.turn_right
     elsif choice == " " || choice == ""
-      @space.player.engage
+      @space.engage
     end
-
-    @space.align_player
   end
 end

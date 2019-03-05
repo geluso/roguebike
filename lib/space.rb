@@ -6,15 +6,26 @@ class Space
     @player = Player.new(xx: 0, yy: 0)
   end
 
-  def align_player
-    if @player.xx >= @grid.width
-      @player.xx = 0
-      @player.yy += 1
-    end
+  def turn_right
+    @player.facing = Geo.turn_right(@player.facing)
+  end
 
-    if @player.yy >= @grid.height
-      @player.yy = 0
+  def turn_left
+    @player.facing = Geo.turn_left(@player.facing)
+  end
+
+  def engage
+    new_coord = Geo.step(@player.xx, @player.yy, @player.facing)
+    if self.valid?(new_coord)
+      @player.xx = new_coord[:xx]
+      @player.yy = new_coord[:yy]
     end
+  end
+
+  def valid?(xx: 0, yy: 0)
+    is_x_valid = xx >= 0 && xx < @grid.width 
+    is_y_valid = yy >= 0 && yy < @grid.height 
+    is_x_valid && is_y_valid
   end
 
   def to_s
