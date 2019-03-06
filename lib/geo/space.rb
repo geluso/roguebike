@@ -26,6 +26,10 @@ class Space
     @asteroids = Set.new
     @projectiles = Set.new
 
+    unless up == nil
+      @structural_points << {xx: up.xx, yy: up.yy}
+    end
+
     self.reset_waygate_state
     self.generate_asteroids
     self.add_waygates(up)
