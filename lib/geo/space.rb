@@ -5,7 +5,7 @@ class Space
   attr_reader :is_travelling_down
   attr_reader :is_travelling_up
 
-  def initialize(width: 5, height: 4, player: nil)
+  def initialize(width: 5, height: 4, player: nil, up: nil)
     @width = width
     @height = height
     @grid = Grid.new(width: width, height: height)
@@ -28,7 +28,7 @@ class Space
 
     self.reset_waygate_state
     self.generate_asteroids
-    self.add_waygates
+    self.add_waygates(up)
   end
 
   def reset_waygate_state
@@ -57,19 +57,28 @@ class Space
     end
   end
 
-  def add_waygates
-    free_points = Set.new
-    while free_points.length < 2
+  def add_waygates(up)
+    point = find_waygate_point
+    @waygate_down = WaygateDown.new(point)
+
+    if up == nil
+      point = find_waygate_point
+      @waygate_up = WaygateUp.new(point)
+    else
+      point = {xx: up.xx, yy: up.yy}
+      @structural_points << point
+      @waygate_up = WaygateUp.new(point)
+    end
+  end
+
+  def find_waygate_point
+    while true
       point = @grid.random_point
       if !@structural_points.include? point
         @structural_points << point
-        free_points << point
+        return point
       end
     end
-
-    free_points = free_points.collect
-    @waygate_down = WaygateDown.new(free_points.next)
-    @waygate_up = WaygateUp.new(free_points.next)
   end
 
   def turn_right
