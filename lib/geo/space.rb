@@ -160,7 +160,7 @@ class Space
   end
 
   def to_s
-    grid = @grid.to_s(@viz)
+    grid = @grid.to_s(@viz, @player)
 
     # draw all the asteroids
     @asteroids.each do |asteroid|

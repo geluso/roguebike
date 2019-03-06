@@ -16,14 +16,15 @@ class Grid
     {xx: xx, yy: yy}
   end
 
-  def to_s(viz=nil)
+  def to_s(viz=nil, player)
     result = ""
     is_row_even = true
 
     @height.times do |row|
       @width.times do |col|
+        distance = Geo.distance_xy(player.xx, player.yy, col, row)
         if is_row_even
-          if viz.seen?(row, col)
+          if viz.seen?(row, col) || distance < VIEW_DISTANCE
             result << "."
           else
             result << " "
@@ -33,7 +34,7 @@ class Grid
         else
           result << " "
 
-          if viz.seen?(row, col)
+          if viz.seen?(row, col) || distance < VIEW_DISTANCE
             result << "."
           else
             result << " "
