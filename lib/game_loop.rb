@@ -28,7 +28,7 @@ class GameLoop
     system("clear")
     puts @space
 
-    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage"
+    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting"
     puts "=" * @space.grid.width * 2
     puts prompt
     

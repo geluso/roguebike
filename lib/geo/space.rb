@@ -6,6 +6,7 @@ class Space
   def initialize(width: 5, height: 4)
     @grid = Grid.new(width: width, height: height)
     @player = Player.new(xx: 0, yy: 0)
+    @viz = Visibility.new
 
     # wait to assign waygates until after asteroids are placed
     @waygate_up = nil
@@ -112,8 +113,8 @@ class Space
 
         # redraw the screen every step
         screen.display
-        sleep PROJECTILE_FRAME_RATE
       end
+      sleep PROJECTILE_FRAME_RATE
     end
 
     screen.is_animated = false
@@ -159,7 +160,7 @@ class Space
   end
 
   def to_s
-    grid = @grid.to_s
+    grid = @grid.to_s(@viz)
 
     # draw all the asteroids
     @asteroids.each do |asteroid|

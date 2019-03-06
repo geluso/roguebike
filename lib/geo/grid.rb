@@ -16,9 +16,34 @@ class Grid
     {xx: xx, yy: yy}
   end
 
-  def to_s
-    line = ". " * @width + "\n"
-    line += " ." * @width + "\n"
-    line = line * (@height / 2)
+  def to_s(viz=nil)
+    result = ""
+    is_row_even = true
+
+    @height.times do |row|
+      @width.times do |col|
+        if is_row_even
+          if viz.seeing?(row, col) || true
+            result << "."
+          else
+            result << " "
+          end
+
+          result << " "
+        else
+          result << " "
+
+          if viz.seeing?(row, col) || true
+            result << "."
+          else
+            result << " "
+          end
+        end
+      end
+      result << "\n"
+      is_row_even = !is_row_even 
+    end
+
+    result
   end
 end
