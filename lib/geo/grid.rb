@@ -23,7 +23,7 @@ class Grid
     @height.times do |row|
       @width.times do |col|
         if is_row_even
-          if viz.seeing?(row, col) || true
+          if viz.seen?(row, col)
             result << "."
           else
             result << " "
@@ -33,7 +33,7 @@ class Grid
         else
           result << " "
 
-          if viz.seeing?(row, col) || true
+          if viz.seen?(row, col)
             result << "."
           else
             result << " "

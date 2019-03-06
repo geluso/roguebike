@@ -164,7 +164,11 @@ class Space
 
     # draw all the asteroids
     @asteroids.each do |asteroid|
-      draw_actor(grid, asteroid)
+      is_showing = @viz.seen?(asteroid.xx, asteroid.yy)
+      is_showing ||= @viz.seeing?(@player, asteroid)
+      if is_showing
+        draw_actor(grid, asteroid)
+      end
     end
 
     # draw projectiles

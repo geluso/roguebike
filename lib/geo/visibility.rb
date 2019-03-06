@@ -21,11 +21,19 @@ class Visibility
     @seeing[key_] = false
   end
 
-  def seeing?(xx, yy)
-    @seeing[key(xx, yy)]
+  def seen?(xx, yy)
+    @seen[key(xx, yy)]
   end
 
-  def seen?(xx, yy)
+  def seeing?(player, actor)
+    xx = actor.xx
+    yy = actor.yy
+
+    distance = Geo.distance(player, actor)
+    if distance < 5
+      @seen[key(xx, yy)] = true
+    end
+
     @seen[key(xx, yy)]
   end
 

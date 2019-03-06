@@ -81,4 +81,10 @@ class Geo
 
     {xx: xx, yy: yy, facing: direction}
   end
+
+  def self.distance(thing1, thing2)
+    dx = thing1.xx - thing2.xx
+    dy = thing1.yy - thing2.yy
+    return Math.sqrt(dx * dx + dy * dy)
+  end
 end
