@@ -164,11 +164,7 @@ class Space
 
     # draw all the asteroids
     @asteroids.each do |asteroid|
-      is_showing = @viz.seen?(asteroid.xx, asteroid.yy)
-      is_showing ||= @viz.seeing?(@player, asteroid)
-      if is_showing
-        draw_actor(grid, asteroid)
-      end
+      draw_actor(grid, asteroid)
     end
 
     # draw projectiles
@@ -185,6 +181,12 @@ class Space
   end
 
   def draw_actor(grid, actor)
+    is_showing = @viz.seen?(actor.xx, actor.yy)
+    is_showing ||= @viz.seeing?(@player, actor)
+    if !is_showing
+      return
+    end
+
     # a dot and space for each space, then a newline at the end
     cell = (@grid.width * 2 + 1) * actor.yy
     cell += actor.xx * 2
