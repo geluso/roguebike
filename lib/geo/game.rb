@@ -13,15 +13,19 @@ class Game
   end
 
   def travel_down
+    @level_index += 1
+    if @level_index >= @levels.length
       @space = Space.new(width: @width, height: @height, player: @space.player)
       @levels << @space
-      @level_index += 1
+    else
+      @space = @levels[@level_index]
+    end
   end
 
   def travel_up
-      if @level_index > 0
-        @level_index -= 1
-        @space = @levels[@level_index]
-      end
+    if @level_index > 0
+      @level_index -= 1
+      @space = @levels[@level_index]
+    end
   end
 end

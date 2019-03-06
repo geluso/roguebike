@@ -79,6 +79,8 @@ class GameLoop
       self.force_down
     elsif choice == "999"
       self.inifinite_sensors 
+    elsif choice == "555"
+      self.default_sensors 
     else
       @error_message = nil
     end
@@ -217,5 +219,9 @@ class GameLoop
 
   def inifinite_sensors
     @game.space.player.sensor_range = Float::INFINITY
+  end
+
+  def default_sensors
+    @game.space.player.sensor_range = DEFAULT_SENSOR_RANGE
   end
 end
