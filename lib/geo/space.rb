@@ -1,16 +1,34 @@
 require 'set'
 
 class Space
-  attr_reader :player, :grid, :asteroids, :waygate_up, :waygate_down
+  attr_reader :player, :grid, :asteroids, :waygate_up, :waygate_down, :level_index
 
   def initialize(width: 5, height: 4)
+    @width = width
+    @height = height
     @grid = Grid.new(width: width, height: height)
+
+    @levels = []
+    @levels << @grid
+    @level_index = 0
+
     @player = Player.new(xx: 0, yy: 0)
     @viz = Visibility.new
 
     # wait to assign waygates until after asteroids are placed
     @waygate_up = nil
     @waygate_down = nil
+
+    @structural_points = Set.new
+    @asteroids = Set.new
+    @projectiles = Set.new
+
+    self.generate_asteroids
+    self.add_waygates
+  end
+
+  def swap_for_current_space
+    @viz = Visibility.new
 
     @structural_points = Set.new
     @asteroids = Set.new
@@ -152,10 +170,20 @@ class Space
   def react(actor)
     if actor.xx == @waygate_down.xx && actor.yy == @waygate_down.yy
       puts "DOWN!!"
+
+      level = Space.new(width: @width, height: @height)
+      @levels << level
+      @level_index += 1
+
+      self.swap_for_current_space
     end
 
     if actor.xx == @waygate_up.xx && actor.yy == @waygate_up.yy
       puts "up!!"
+      if @level_index > 0
+        @level_index -= 1
+        self.swap_for_current_space
+      end
     end
   end
 

@@ -32,6 +32,8 @@ class GameLoop
     puts "=" * @space.grid.width * 2
     puts prompt
     
+    puts "       Level: #{@space.level_index}"
+
     speed = @space.player.speed
     speed_meter = "+" * speed
     puts "       Speed: #{speed} #{speed_meter}"
