@@ -2,7 +2,7 @@ class GameLoop
   attr_writer :is_animated
 
   def initialize(width: 5, height: 4)
-    @space = Space.new(width: width, height: height)
+    @game = Game.new(width: width, height: height)
     @is_running = true
     
     @has_fired = false
@@ -26,19 +26,19 @@ class GameLoop
 
   def display
     system("clear")
-    puts @space
+    puts @game.space
 
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting"
-    puts "=" * @space.grid.width * 2
+    puts "=" * @game.space.grid.width * 2
     puts prompt
     
-    puts "       Level: #{@space.level_index}"
+    puts "       Level: #{@game.level_index}"
 
-    speed = @space.player.speed
+    speed = @game.space.player.speed
     speed_meter = "+" * speed
     puts "       Speed: #{speed} #{speed_meter}"
 
-    hp_meter = "#{@space.player.damage}/#{@space.player.hp}"
+    hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
     puts "      Health: #{hp_meter}"
     puts " Turn change: #{@turn_state}"
     puts "Speed change: #{@speed_state}"
@@ -47,11 +47,11 @@ class GameLoop
       puts @error_message
     end
 
-    # xx = @space.player.xx
-    # yy = @space.player.yy
+    # xx = @game.space.player.xx
+    # yy = @game.space.player.yy
 
     # puts "player: (#{xx}, #{yy})"
-    # puts "asteroids: #{@space.asteroids}"
+    # puts "asteroids: #{@game.space.asteroids}"
   end
 
   def tick(choice)
@@ -73,6 +73,12 @@ class GameLoop
       self.fire_ultra
     elsif choice == " " || choice == ""
       self.engage
+    elsif choice == "t"
+      self.force_up
+    elsif choice == "b"
+      self.force_down
+    elsif choice == "999"
+      self.inifinite_sensors 
     else
       @error_message = nil
     end
@@ -87,7 +93,7 @@ class GameLoop
       elsif @turn_state == "right"
         @turn_state = "straight"
       end
-      @space.turn_left
+      @game.space.turn_left
     end
   end
 
@@ -100,7 +106,7 @@ class GameLoop
       elsif @turn_state == "left"
         @turn_state = "straight"
       end
-      @space.turn_right
+      @game.space.turn_right
     end
   end
 
@@ -113,14 +119,14 @@ class GameLoop
       elsif @speed_state == "maintain"
         @speed_state = "speedup"
       end
-      @space.speed_up
+      @game.space.speed_up
     end
   end
 
   def attempt_slow_down
     if @speed_state == "slowdown" && IS_SPEED_RESTRICTED
       @error_message = "Already slowed down."
-    elsif @space.player.speed <= 0
+    elsif @game.space.player.speed <= 0
       @error_message = "Speed already at zero."
     else
       if @speed_state == "speedup"
@@ -128,7 +134,7 @@ class GameLoop
       elsif @speed_state == "maintain"
         @speed_state = "slowdown"
       end
-      @space.slow_down
+      @game.space.slow_down
     end
   end
 
@@ -137,9 +143,9 @@ class GameLoop
       @error_message = "Already fired."
     else
       @has_fired = true
-      projectile = @space.player.fire
-      @space.fire(projectile)
-      @space.animate_projectiles(self)
+      projectile = @game.space.player.fire
+      @game.space.fire(projectile)
+      @game.space.animate_projectiles(self)
     end
   end
 
@@ -148,10 +154,10 @@ class GameLoop
       @error_message = "Already fired."
     else
       @has_fired = true
-      @space.player.fire_mega.each do |projectile|
-        @space.fire(projectile)
+      @game.space.player.fire_mega.each do |projectile|
+        @game.space.fire(projectile)
       end
-      @space.animate_projectiles(self)
+      @game.space.animate_projectiles(self)
     end
   end
 
@@ -160,20 +166,56 @@ class GameLoop
       @error_message = "Already fired."
     else
       @has_fired = true
-      @space.player.fire_ultra.each do |projectile|
-        @space.fire(projectile)
+      @game.space.player.fire_ultra.each do |projectile|
+        @game.space.fire(projectile)
       end
-      @space.animate_projectiles(self)
+      @game.space.animate_projectiles(self)
     end
   end
 
   def engage
-    @space.player.speed.times do
-      @space.engage
+    @game.space.player.speed.times do
+      @game.space.engage
 
       @has_fired = false
       @turn_state = "straight"
       @speed_state = "maintain"
+
+      moved_through_waygate = self.handle_waygate
+
+      if !CONTINUE_MOVING_THROUGH_WAYGATE
+        # stop iterating through .times
+        break
+      end
     end
+  end
+
+  def handle_waygate
+    moved_through_waygate = false
+
+    if @game.space.is_travelling_up || @game.space.is_travelling_down
+      moved_through_waygate = true
+      if @game.space.is_travelling_up
+        @game.space.reset_waygate_state
+        @game.travel_up
+      else @game.space.is_travelling_down
+        @game.space.reset_waygate_state
+        @game.travel_down
+      end
+    end
+
+    false
+  end
+
+  def force_up
+    @game.travel_up
+  end
+
+  def force_down
+    @game.travel_down
+  end
+
+  def inifinite_sensors
+    @game.space.player.sensor_range = Float::INFINITY
   end
 end

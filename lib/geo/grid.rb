@@ -24,7 +24,7 @@ class Grid
       @width.times do |col|
         distance = Geo.distance_xy(player.xx, player.yy, col, row)
         if is_row_even
-          if viz.seen?(col, row) || distance < VIEW_DISTANCE
+          if viz.seen?(col, row) || distance < player.sensor_range
             result << "."
           else
             result << " "
@@ -34,7 +34,7 @@ class Grid
         else
           result << " "
 
-          if viz.seen?(col, row) || distance < VIEW_DISTANCE
+          if viz.seen?(col, row) || distance < player.sensor_range
             result << "."
           else
             result << " "

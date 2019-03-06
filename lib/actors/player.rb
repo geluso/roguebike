@@ -1,5 +1,6 @@
 class Player
   attr_accessor :xx, :yy, :facing, :speed, :hp
+  attr_accessor :sensor_range
 
   def initialize(xx: 0, yy: 0)
     @xx = xx
@@ -9,6 +10,8 @@ class Player
     
     @hits = 0
     @hp = 10
+
+    @sensor_range = DEFAULT_SENSOR_RANGE
   end
 
   def symbol
