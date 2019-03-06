@@ -77,7 +77,7 @@ class GameLoop
   end
 
   def attempt_turn_left
-    if @turn_state == "left"
+    if @turn_state == "left" && IS_TURNING_RESTRICTED
       @error_message = "Already turned left."
     else
       if @turn_state == "straight"
@@ -90,7 +90,7 @@ class GameLoop
   end
 
   def attempt_turn_right
-    if @turn_state == "right"
+    if @turn_state == "right" && IS_TURNING_RESTRICTED
       @error_message = "Already turned right."
     else
       if @turn_state == "straight"
@@ -103,7 +103,7 @@ class GameLoop
   end
 
   def attempt_speed_up
-    if @speed_state == "speedup"
+    if @speed_state == "speedup" && IS_SPEED_RESTRICTED
       @error_message = "Already sped up."
     else
       if @speed_state == "slowdown"
@@ -116,7 +116,7 @@ class GameLoop
   end
 
   def attempt_slow_down
-    if @speed_state == "slowdown"
+    if @speed_state == "slowdown" && IS_SPEED_RESTRICTED
       @error_message = "Already slowed down."
     elsif @space.player.speed <= 0
       @error_message = "Speed already at zero."
@@ -131,7 +131,7 @@ class GameLoop
   end
 
   def fire
-    if @has_fired
+    if @has_fired && IS_FIRING_RESTRICTED
       @error_message = "Already fired."
     else
       @has_fired = true
@@ -142,7 +142,7 @@ class GameLoop
   end
 
   def fire_mega
-    if @has_fired
+    if @has_fired && IS_FIRING_RESTRICTED
       @error_message = "Already fired."
     else
       @has_fired = true
@@ -154,7 +154,7 @@ class GameLoop
   end
 
   def fire_ultra
-    if @has_fired
+    if @has_fired && IS_FIRING_RESTRICTED
       @error_message = "Already fired."
     else
       @has_fired = true
