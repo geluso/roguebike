@@ -30,7 +30,7 @@ class Visibility
     yy = actor.yy
 
     distance = Geo.distance(player, actor)
-    if distance < 5
+    if distance < player.sensor_range
       @seen[key(xx, yy)] = true
     end
 
