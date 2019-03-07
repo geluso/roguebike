@@ -2,6 +2,7 @@ class Player
   attr_accessor :xx, :yy, :facing, :speed
   attr_accessor :hp, :fuel, :fuel_capacity
   attr_accessor :sensor_range
+  attr_accessor :inventory
 
   def initialize(xx: 0, yy: 0)
     @xx = xx
@@ -16,6 +17,7 @@ class Player
     @fuel_capacity = DEFAULT_FUEL_CAPACITY
 
     @sensor_range = DEFAULT_SENSOR_RANGE
+    @inventory = Inventory.new
   end
 
   def symbol
