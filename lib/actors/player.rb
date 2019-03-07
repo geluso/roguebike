@@ -1,5 +1,6 @@
 class Player
-  attr_accessor :xx, :yy, :facing, :speed, :hp
+  attr_accessor :xx, :yy, :facing, :speed
+  attr_accessor :hp, :fuel, :fuel_capacity
   attr_accessor :sensor_range
 
   def initialize(xx: 0, yy: 0)
@@ -10,6 +11,9 @@ class Player
     
     @hits = 0
     @hp = 10
+
+    @fuel = DEFAULT_FUEL_CAPACITY
+    @fuel_capacity = DEFAULT_FUEL_CAPACITY
 
     @sensor_range = DEFAULT_SENSOR_RANGE
   end

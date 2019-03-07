@@ -32,14 +32,19 @@ class GameLoop
     puts "=" * @game.space.grid.width * 2
     puts prompt
     
-    puts "       Level: #{@game.level_index}"
+    puts "       Level: #{@game.level_index + 1}"
 
     speed = @game.space.player.speed
     speed_meter = "+" * speed
     puts "       Speed: #{speed} #{speed_meter}"
 
+    fuel = @game.space.player.fuel
+    full = @game.space.player.fuel_capacity
+    fuel_meter = "#{fuel}/#{full}"
+
     hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
     puts "      Health: #{hp_meter}"
+    puts "        Fuel: #{fuel_meter}"
     puts " Turn change: #{@turn_state}"
     puts "Speed change: #{@speed_state}"
 
@@ -176,6 +181,7 @@ class GameLoop
   end
 
   def engage
+    @game.space.player.fuel -= 1
     @game.space.player.speed.times do
       @game.space.engage
 
