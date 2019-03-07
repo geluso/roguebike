@@ -57,14 +57,14 @@ class GameLoop
   def tick(choice)
     if choice == "x"
       @is_running = false
-    elsif choice == "h"
+    elsif choice == "h" || choice == "a"
       self.attempt_turn_left
     elsif choice == "l"
-      self.attempt_turn_right
+      self.attempt_turn_right || choice == "d"
     elsif choice == "+"
-      self.attempt_speed_up
+      self.attempt_speed_up || choice == "w"
     elsif choice == "-"
-      self.attempt_slow_down
+      self.attempt_slow_down || choice == "s"
     elsif choice == "f"
       self.fire
     elsif choice == "F"
