@@ -3,6 +3,8 @@ class GameLoop
 
   def initialize(width: 5, height: 4)
     @game = Game.new(width: width, height: height)
+    @screen = Screen.new(width: width, height: height, game: @game)
+
     @is_running = true
     
     @has_fired = false
@@ -15,48 +17,13 @@ class GameLoop
 
   def run
     while @is_running
-      self.display
+      @screen.display
 
       if !@is_animated
-        choice = STDIN.gets.chomp
+        choice = @screen.getch
         self.tick(choice)
       end
     end
-  end
-
-  def display
-    system("clear")
-    puts @game.space
-
-    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting"
-    puts "=" * @game.space.grid.width * 2
-    puts prompt
-    
-    puts "       Level: #{@game.level_index + 1}"
-
-    speed = @game.space.player.speed
-    speed_meter = "+" * speed
-    puts "       Speed: #{speed} #{speed_meter}"
-
-    fuel = @game.space.player.fuel
-    full = @game.space.player.fuel_capacity
-    fuel_meter = "#{fuel}/#{full}"
-
-    hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
-    puts "      Health: #{hp_meter}"
-    puts "        Fuel: #{fuel_meter}"
-    puts " Turn change: #{@turn_state}"
-    puts "Speed change: #{@speed_state}"
-
-    if @error_message
-      puts @error_message
-    end
-
-    # xx = @game.space.player.xx
-    # yy = @game.space.player.yy
-
-    # puts "player: (#{xx}, #{yy})"
-    # puts "asteroids: #{@game.space.asteroids}"
   end
 
   def tick(choice)

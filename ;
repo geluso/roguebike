@@ -1,0 +1,7 @@
+require "ncursesw"
+
+Ncurses.initscr
+Ncurses.start_color
+
+bg = Ncurses::COLOR_BLACK
+
