@@ -24,7 +24,7 @@ class Screen
     Ncurses.init_pair(3, Ncurses::COLOR_CYAN, background);
     Ncurses.init_pair(4, Ncurses::COLOR_BLUE, background);
 
-    @bwin = Ncurses.stdscr
+    @screen = Ncurses.stdscr
     Ncurses.refresh
   end
 
@@ -33,35 +33,35 @@ class Screen
   end
 
   def display
-    @bwin.clear
+    @screen.clear
 
-    @bwin.mvaddstr(0, 0, @game.space.to_s)
+    @screen.mvaddstr(0, 0, @game.space.to_s)
     draw_actor(@game.space.player)
     
-    @bwin.move(@game.space.grid.height, 0)
+    @screen.move(@game.space.grid.height, 0)
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting\n"
-    @bwin.addstr("=" * @game.space.grid.width * 2 + "\n")
-    @bwin.addstr(prompt)
+    @screen.addstr("=" * @game.space.grid.width * 2 + "\n")
+    @screen.addstr(prompt)
     
-    @bwin.addstr("       Level: #{@game.level_index + 1}\n")
+    @screen.addstr("       Level: #{@game.level_index + 1}\n")
 
     speed = @game.space.player.speed
     speed_meter = "+" * speed
-    @bwin.addstr("       Speed: #{speed} #{speed_meter}\n")
+    @screen.addstr("       Speed: #{speed} #{speed_meter}\n")
 
     fuel = @game.space.player.fuel
     full = @game.space.player.fuel_capacity
     fuel_meter = "#{fuel}/#{full}"
 
     hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
-    @bwin.addstr("      Health: #{hp_meter}\n")
-    @bwin.addstr("        Fuel: #{fuel_meter}\n")
+    @screen.addstr("      Health: #{hp_meter}\n")
+    @screen.addstr("        Fuel: #{fuel_meter}\n")
 
     if @error_message
       puts @error_message
     end
 
-    @bwin.refresh
+    @screen.refresh
   end
 
   def draw_actor(actor)
@@ -71,10 +71,10 @@ class Screen
       xx += 1
     end
 
-    @bwin.attrset(actor.color)
-    @bwin.mvaddstr(yy, xx, actor.symbol)
+    @screen.attrset(actor.color)
+    @screen.mvaddstr(yy, xx, actor.symbol)
 
     # reset to default color
-    @bwin.attrset(Ncurses.COLOR_PAIR(1))
+    @screen.attrset(Ncurses.COLOR_PAIR(1))
   end
 end
