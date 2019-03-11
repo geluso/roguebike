@@ -33,6 +33,7 @@ class Space
     self.reset_waygate_state
     self.generate_asteroids
     self.add_waygates(up)
+    self.place_random_items
   end
 
   def reset_waygate_state
@@ -62,11 +63,11 @@ class Space
   end
 
   def add_waygates(up)
-    point = find_waygate_point
+    point = find_open_point
     @waygate_down = WaygateDown.new(point)
 
     if up == nil
-      point = find_waygate_point
+      point = find_open_point
       @waygate_up = WaygateUp.new(point)
     else
       point = {xx: up.xx, yy: up.yy}
@@ -75,7 +76,15 @@ class Space
     end
   end
 
-  def find_waygate_point
+  def place_random_items
+    total = rand(6..12)
+    total.times do
+      point = find_open_point
+      item = Fuel.new
+    end
+  end
+
+  def find_open_point
     while true
       point = @grid.random_point
       if !@structural_points.include? point
@@ -84,6 +93,7 @@ class Space
       end
     end
   end
+
 
   def turn_right
     @player.facing = Geo.turn_right(@player.facing)
