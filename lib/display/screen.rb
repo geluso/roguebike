@@ -6,6 +6,7 @@ class Screen
     @width = width * 2
     @height = height
     @game = game
+
     @is_animated = false
 
     width = width * 2
@@ -23,6 +24,7 @@ class Screen
     Ncurses.init_pair(2, Ncurses::COLOR_YELLOW, background);
     Ncurses.init_pair(3, Ncurses::COLOR_CYAN, background);
     Ncurses.init_pair(4, Ncurses::COLOR_BLUE, background);
+    Ncurses.init_pair(5, Ncurses::COLOR_RED, background);
 
     @screen = Ncurses.stdscr
     Ncurses.refresh
@@ -34,10 +36,29 @@ class Screen
 
   def display
     @screen.clear
-
     @screen.mvaddstr(0, 0, @game.space.to_s)
+
+    # draw all the asteroids
+    @game.space.asteroids.each do |asteroid|
+      draw_actor(asteroid)
+    end
+
+    # draw projectiles
+    @game.space.projectiles.each do |projectile|
+      draw_actor(projectile)
+    end
+
+    # then draw the player
+    draw_actor(@game.space.waygate_up)
+    draw_actor(@game.space.waygate_down)
     draw_actor(@game.space.player)
-    
+
+    hud
+
+    @screen.refresh
+  end
+  
+  def hud
     @screen.move(@game.space.grid.height, 0)
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting\n"
     @screen.addstr("=" * @game.space.grid.width * 2 + "\n")
@@ -60,11 +81,13 @@ class Screen
     if @error_message
       puts @error_message
     end
-
-    @screen.refresh
   end
 
   def draw_actor(actor)
+    if !@game.space.is_thing_visible?(actor)
+      return
+    end
+
     yy = actor.yy
     xx = actor.xx * 2
     if yy.odd?

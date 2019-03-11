@@ -1,4 +1,4 @@
-class Player
+class Player < Actor
   attr_accessor :xx, :yy, :facing, :speed
   attr_accessor :hp, :fuel, :fuel_capacity
   attr_accessor :sensor_range

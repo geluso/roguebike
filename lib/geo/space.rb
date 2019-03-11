@@ -2,6 +2,8 @@ require 'set'
 
 class Space
   attr_reader :player, :grid, :asteroids, :waygate_up, :waygate_down
+  attr_reader :viz
+  attr_reader :projectiles, :asteroids
   attr_reader :is_travelling_down
   attr_reader :is_travelling_up
 
@@ -198,34 +200,16 @@ class Space
     end
   end
 
+  def is_thing_visible?(actor)
+    is_showing = @viz.seen?(actor.xx, actor.yy)
+    is_showing ||= @viz.seeing?(@player, actor)
+  end
+
   def to_s
-    grid = @grid.to_s(@viz, @player)
-
-    # draw all the asteroids
-    @asteroids.each do |asteroid|
-      draw_actor(grid, asteroid)
-    end
-
-    # draw projectiles
-    @projectiles.each do |projectile|
-      draw_actor(grid, projectile)
-    end
-
-    # then draw the player
-    draw_actor(grid, @waygate_up)
-    draw_actor(grid, @waygate_down)
-    draw_actor(grid, @player)
-
-    grid
+    @grid.to_s(@viz, @player)
   end
 
   def draw_actor(grid, actor)
-    is_showing = @viz.seen?(actor.xx, actor.yy)
-    is_showing ||= @viz.seeing?(@player, actor)
-    if !is_showing
-      return
-    end
-
     # a dot and space for each space, then a newline at the end
     cell = (@grid.width * 2 + 1) * actor.yy
     cell += actor.xx * 2
