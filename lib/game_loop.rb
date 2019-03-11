@@ -1,6 +1,4 @@
 class GameLoop
-  attr_writer :is_animated
-
   def initialize(width: 5, height: 4)
     @game = Game.new(width: width, height: height)
     @screen = Screen.new(width: width, height: height, game: @game)
@@ -11,7 +9,6 @@ class GameLoop
     @turn_state = "straight"
     @speed_state = "maintain"
 
-    @is_animated = false
     @error_message = nil
   end
 
@@ -19,7 +16,7 @@ class GameLoop
     while @is_running
       @screen.display
 
-      if !@is_animated
+      if !@screen.is_animated
         choice = @screen.getch
         self.tick(choice)
       end
@@ -27,9 +24,9 @@ class GameLoop
   end
 
   def tick(choice)
-    puts choice
-    if choice == "x".ord
+    if choice == "x".ord || choice == "q".ord
       @is_running = false
+      Ncurses.endwin()
     elsif choice == "h".ord
       self.attempt_turn_left
     elsif choice == "l".ord
@@ -38,11 +35,11 @@ class GameLoop
       self.attempt_speed_up
     elsif choice == "-".ord || choice == "J".ord
       self.attempt_slow_down
-    elsif choice == "f".ord
+    elsif choice == "f".ord || choice == "1".ord
       self.fire
-    elsif choice == "F".ord
+    elsif choice == "F".ord || choice == "2".ord
       self.fire_mega
-    elsif choice == "FIRE"
+    elsif choice == "3".ord
       self.fire_ultra
     elsif choice == " ".ord || choice == "k".ord
       self.engage
@@ -120,7 +117,7 @@ class GameLoop
       @has_fired = true
       projectile = @game.space.player.fire
       @game.space.fire(projectile)
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
@@ -132,7 +129,7 @@ class GameLoop
       @game.space.player.fire_mega.each do |projectile|
         @game.space.fire(projectile)
       end
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
@@ -144,7 +141,7 @@ class GameLoop
       @game.space.player.fire_ultra.each do |projectile|
         @game.space.fire(projectile)
       end
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
