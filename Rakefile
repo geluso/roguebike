@@ -11,3 +11,9 @@ task :big do
   game = GameLoop.new(height: 16, width: 40)
   game.run
 end
+
+desc 'Run the game'
+task :run do
+  game = GameLoop.new(height: 16, width: 40)
+  game.run
+end

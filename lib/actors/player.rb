@@ -1,4 +1,4 @@
-class Player
+class Player < Actor
   attr_accessor :xx, :yy, :facing, :speed
   attr_accessor :hp, :fuel, :fuel_capacity
   attr_accessor :sensor_range
@@ -21,8 +21,11 @@ class Player
   end
 
   def symbol
-    ss = Geo.symbol(@facing)
-    Pastel.new.yellow(ss)
+    Geo.symbol(@facing)
+  end
+
+  def color
+    Ncurses.COLOR_PAIR(2)
   end
 
   def slow_down

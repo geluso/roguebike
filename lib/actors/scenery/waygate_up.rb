@@ -1,4 +1,4 @@
-class WaygateUp
+class WaygateUp < Actor
   attr_reader :xx, :yy
 
   def initialize(xx: 0, yy:0)

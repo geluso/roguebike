@@ -1,4 +1,4 @@
-class Projectile
+class Projectile < Actor
   attr_accessor :is_alive
 
   def initialize(transform)
@@ -28,5 +28,9 @@ class Projectile
 
   def to_s
     "Projectile @ #{@transform.xx} #{@transform.yy}"
+  end
+
+  def color
+    Ncurses.COLOR_PAIR(5)
   end
 end

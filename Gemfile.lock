@@ -2,8 +2,10 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.1.2)
+    curses (1.2.7)
     equatable (0.5.0)
     method_source (0.9.2)
+    ncursesw (1.4.10)
     pastel (0.7.2)
       equatable (~> 0.5.0)
       tty-color (~> 0.4.0)
@@ -18,9 +20,11 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  curses
+  ncursesw
   pastel
   pry
   require_all
 
 BUNDLED WITH
-   1.16.1
+   1.17.3

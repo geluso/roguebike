@@ -1,90 +1,55 @@
 class GameLoop
-  attr_writer :is_animated
-
   def initialize(width: 5, height: 4)
     @game = Game.new(width: width, height: height)
+    @screen = Screen.new(width: width, height: height, game: @game)
+
     @is_running = true
     
     @has_fired = false
     @turn_state = "straight"
     @speed_state = "maintain"
 
-    @is_animated = false
     @error_message = nil
   end
 
   def run
     while @is_running
-      self.display
+      @screen.display
 
-      if !@is_animated
-        choice = STDIN.gets.chomp
+      if !@screen.is_animated
+        choice = @screen.getch
         self.tick(choice)
       end
     end
   end
 
-  def display
-    system("clear")
-    puts @game.space
-
-    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting"
-    puts "=" * @game.space.grid.width * 2
-    puts prompt
-    
-    puts "       Level: #{@game.level_index + 1}"
-
-    speed = @game.space.player.speed
-    speed_meter = "+" * speed
-    puts "       Speed: #{speed} #{speed_meter}"
-
-    fuel = @game.space.player.fuel
-    full = @game.space.player.fuel_capacity
-    fuel_meter = "#{fuel}/#{full}"
-
-    hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
-    puts "      Health: #{hp_meter}"
-    puts "        Fuel: #{fuel_meter}"
-    puts " Turn change: #{@turn_state}"
-    puts "Speed change: #{@speed_state}"
-
-    if @error_message
-      puts @error_message
-    end
-
-    # xx = @game.space.player.xx
-    # yy = @game.space.player.yy
-
-    # puts "player: (#{xx}, #{yy})"
-    # puts "asteroids: #{@game.space.asteroids}"
-  end
-
   def tick(choice)
-    if choice == "x"
+    if choice == "x".ord || choice == "q".ord
       @is_running = false
-    elsif choice == "h" || choice == "a"
+      Ncurses.endwin()
+    elsif choice == "h".ord
       self.attempt_turn_left
-    elsif choice == "l"
-      self.attempt_turn_right || choice == "d"
-    elsif choice == "+"
-      self.attempt_speed_up || choice == "w"
-    elsif choice == "-"
-      self.attempt_slow_down || choice == "s"
-    elsif choice == "f"
+    elsif choice == "l".ord
+      self.attempt_turn_right
+    elsif choice == "+".ord || choice == "K".ord
+      self.attempt_speed_up
+    elsif choice == "-".ord || choice == "J".ord
+      self.attempt_slow_down
+    elsif choice == "f".ord || choice == "1".ord
       self.fire
-    elsif choice == "F"
+    elsif choice == "F".ord || choice == "2".ord
       self.fire_mega
-    elsif choice == "FIRE"
+    elsif choice == "3".ord
       self.fire_ultra
-    elsif choice == " " || choice == ""
+    elsif choice == " ".ord || choice == "k".ord
       self.engage
-    elsif choice == "t"
+    elsif choice == "t".ord
       self.force_up
-    elsif choice == "b"
+    elsif choice == "b".ord
       self.force_down
-    elsif choice == "999"
+    elsif choice == "9".ord
       self.inifinite_sensors 
-    elsif choice == "555"
+    elsif choice == "5".ord
       self.default_sensors 
     else
       @error_message = nil
@@ -152,7 +117,7 @@ class GameLoop
       @has_fired = true
       projectile = @game.space.player.fire
       @game.space.fire(projectile)
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
@@ -164,7 +129,7 @@ class GameLoop
       @game.space.player.fire_mega.each do |projectile|
         @game.space.fire(projectile)
       end
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
@@ -176,7 +141,7 @@ class GameLoop
       @game.space.player.fire_ultra.each do |projectile|
         @game.space.fire(projectile)
       end
-      @game.space.animate_projectiles(self)
+      @game.space.animate_projectiles(@screen)
     end
   end
 
