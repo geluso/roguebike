@@ -36,11 +36,8 @@ class Screen
     @bwin.clear
 
     @bwin.mvaddstr(0, 0, @game.space.to_s)
+    draw_actor(@game.space.player)
     
-    @bwin.attrset(Ncurses.COLOR_PAIR(2))
-    @bwin.mvaddstr(0, 0, "xxxx")
-    @bwin.attrset(Ncurses.COLOR_PAIR(1))
-
     @bwin.move(@game.space.grid.height, 0)
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting\n"
     @bwin.addstr("=" * @game.space.grid.width * 2 + "\n")
@@ -65,5 +62,19 @@ class Screen
     end
 
     @bwin.refresh
+  end
+
+  def draw_actor(actor)
+    yy = actor.yy
+    xx = actor.xx * 2
+    if yy.odd?
+      xx += 1
+    end
+
+    @bwin.attrset(actor.color)
+    @bwin.mvaddstr(yy, xx, actor.symbol)
+
+    # reset to default color
+    @bwin.attrset(Ncurses.COLOR_PAIR(1))
   end
 end

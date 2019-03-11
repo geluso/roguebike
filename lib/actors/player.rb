@@ -24,6 +24,10 @@ class Player
     Geo.symbol(@facing)
   end
 
+  def color
+    Ncurses.COLOR_PAIR(2)
+  end
+
   def slow_down
     @speed -= 1
     if @speed < 0
