@@ -27,31 +27,32 @@ class GameLoop
   end
 
   def tick(choice)
-    if choice == "x"
+    puts choice
+    if choice == "x".ord
       @is_running = false
-    elsif choice == "h"
+    elsif choice == "h".ord
       self.attempt_turn_left
-    elsif choice == "l"
+    elsif choice == "l".ord
       self.attempt_turn_right
-    elsif choice == "+"
+    elsif choice == "+".ord || choice == "K".ord
       self.attempt_speed_up
-    elsif choice == "-"
+    elsif choice == "-".ord || choice == "J".ord
       self.attempt_slow_down
-    elsif choice == "f"
+    elsif choice == "f".ord
       self.fire
-    elsif choice == "F"
+    elsif choice == "F".ord
       self.fire_mega
     elsif choice == "FIRE"
       self.fire_ultra
-    elsif choice == " " || choice == ""
+    elsif choice == " ".ord || choice == "k".ord
       self.engage
-    elsif choice == "t"
+    elsif choice == "t".ord
       self.force_up
-    elsif choice == "b"
+    elsif choice == "b".ord
       self.force_down
-    elsif choice == "999"
+    elsif choice == "9".ord
       self.inifinite_sensors 
-    elsif choice == "555"
+    elsif choice == "5".ord
       self.default_sensors 
     else
       @error_message = nil

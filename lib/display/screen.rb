@@ -6,72 +6,57 @@ class Screen
     @height = height
     @game = game
 
-    Curses.init_screen
-    Curses.noecho
-    Curses.start_color
-    Curses.use_default_colors
-
-    Curses.init_pair(0, 0, 0)
-    Curses.init_pair(1, 2, 2)
 
     width = width * 2
-    width += 10
-    height += 10
 
-    @bwin = Curses::Window.new(height, width, 0, 0)
-    @bwin.refresh
+    Ncurses.initscr
+    Ncurses.start_color
+
+    Ncurses.nl()
+    Ncurses.noecho()
+    Ncurses.curs_set(0)
+    #Ncurses.stdscr.nodelay(true)
+
+    @bwin = Ncurses.stdscr
+    Ncurses.refresh
+  end
+
+  def getch
+    Ncurses.getch
   end
 
   def display
     @bwin.clear
-    @bwin.box("|", "=")
     
-    @bwin << @game.space.to_s
-    Curses.attron(1) {
-      @bwin.setpos(0, 0)
-      @bwin.addstr("9", )
-    }
+    @bwin.mvaddstr(0, 0, @game.space.to_s)
 
-    @bwin.refresh
-  end
+    player = @game.space.player
+    @bwin.mvaddstr(player.xx, player.yy, player.symbol)
 
-  def getch
-    @bwin.getch
-  end
+    @bwin.move(@game.space.grid.height, 0)
 
-  def other
-    system("clear")
-    puts @game.space
-
-    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting"
-    puts "=" * @game.space.grid.width * 2
-    puts prompt
+    prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting\n"
+    @bwin.addstr("=" * @game.space.grid.width * 2 + "\n")
+    @bwin.addstr(prompt)
     
-    puts "       Level: #{@game.level_index + 1}"
+    @bwin.addstr("       Level: #{@game.level_index + 1}\n")
 
     speed = @game.space.player.speed
     speed_meter = "+" * speed
-    puts "       Speed: #{speed} #{speed_meter}"
+    @bwin.addstr("       Speed: #{speed} #{speed_meter}\n")
 
     fuel = @game.space.player.fuel
     full = @game.space.player.fuel_capacity
     fuel_meter = "#{fuel}/#{full}"
 
     hp_meter = "#{@game.space.player.damage}/#{@game.space.player.hp}"
-    puts "      Health: #{hp_meter}"
-    puts "        Fuel: #{fuel_meter}"
-    puts " Turn change: #{@turn_state}"
-    puts "Speed change: #{@speed_state}"
+    @bwin.addstr("      Health: #{hp_meter}\n")
+    @bwin.addstr("        Fuel: #{fuel_meter}\n")
 
     if @error_message
       puts @error_message
     end
 
-    # xx = @game.space.player.xx
-    # yy = @game.space.player.yy
-
-    # puts "player: (#{xx}, #{yy})"
-    # puts "asteroids: #{@game.space.asteroids}"
+    @bwin.refresh
   end
-
 end
