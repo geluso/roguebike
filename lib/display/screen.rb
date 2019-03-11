@@ -11,11 +11,18 @@ class Screen
     width = width * 2
 
     Ncurses.initscr
+    Ncurses.start_color
     Ncurses.cbreak
     Ncurses.noecho
     Ncurses.nonl
     Ncurses.stdscr.intrflush(false)
     Ncurses.stdscr.keypad(true)
+
+    background = Ncurses::COLOR_BLACK
+    Ncurses.init_pair(1, Ncurses::COLOR_WHITE, background);
+    Ncurses.init_pair(2, Ncurses::COLOR_YELLOW, background);
+    Ncurses.init_pair(3, Ncurses::COLOR_CYAN, background);
+    Ncurses.init_pair(4, Ncurses::COLOR_BLUE, background);
 
     @bwin = Ncurses.stdscr
     Ncurses.refresh
@@ -27,10 +34,14 @@ class Screen
 
   def display
     @bwin.clear
-    
-    @bwin.mvaddstr(0, 0, @game.space.to_s)
-    @bwin.move(@game.space.grid.height, 0)
 
+    @bwin.mvaddstr(0, 0, @game.space.to_s)
+    
+    @bwin.attrset(Ncurses.COLOR_PAIR(2))
+    @bwin.mvaddstr(0, 0, "xxxx")
+    @bwin.attrset(Ncurses.COLOR_PAIR(1))
+
+    @bwin.move(@game.space.grid.height, 0)
     prompt = "(x) quit (h) left --(j)(k)++ (l) right (space) engage (f|F|FIRE) shooting\n"
     @bwin.addstr("=" * @game.space.grid.width * 2 + "\n")
     @bwin.addstr(prompt)
